@@ -183,6 +183,8 @@ export async function fetchCustomers() {
 }
 
 export async function fetchFilteredCustomers(query: string) {
+  noStore();
+  
   try {
     const data = await sql<CustomersTableType>`
 		SELECT
