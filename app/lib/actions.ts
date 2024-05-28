@@ -21,6 +21,19 @@ const FormSchema = z.object({
     date: z.string(),
 });
 
+const FormCustomerSchema = z.object({
+  id: z.string(),
+  name: z.string({
+    invalid_type_error: 'Please enter a name.',
+  }),
+  email: z.string({
+    invalid_type_error: 'Please enter a email.',
+  }),
+  image_url: z.string({
+    invalid_type_error: 'Please select avatar.',
+  }),
+});
+
 
 export type State = {
   errors?: {
@@ -31,8 +44,18 @@ export type State = {
   message?: string | null;
 };
 
+export type CustomerState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    image_url?: string[];
+  };
+  message?: string | null;
+};
+
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const CreateCustomer = FormCustomerSchema.omit({ id: true, date: true });
 
 export async function createInvoice(prevState: State, formData: FormData) {
   const validatedFields = CreateInvoice.safeParse({
@@ -64,6 +87,36 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
+}
+
+export async function createCustomer(prevState: CustomerState, formData: FormData) {
+  const validatedFields = CreateCustomer.safeParse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        image_url: formData.get('image_url'),
+      });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Customer.',
+    };
+  }
+      const { name, email, image_url } = validatedFields.data;
+
+    try{
+    await sql`
+        INSERT INTO customers (name, email, image_url)
+        VALUES (${name}, ${email}, ${image_url})
+        `;
+    }catch (error){
+    return {
+        message: 'Database Error: Failed to Create Customer.',
+      };
+    }
+
+  revalidatePath('/dashboard/customers');
+  redirect('/dashboard/customers');
 }
 
 export async function updateInvoice(

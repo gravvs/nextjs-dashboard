@@ -78,6 +78,11 @@ export type CustomerField = {
   name: string;
 };
 
+export type CustomerAvatar = {
+  id: string;
+  image_url: string;
+};
+
 export type InvoiceForm = {
   id: string;
   customer_id: string;

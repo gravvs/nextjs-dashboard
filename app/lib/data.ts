@@ -182,6 +182,14 @@ export async function fetchCustomers() {
   }
 }
 
+export async function fetchImg() {
+  const {
+    customers
+  } = require('../../app/lib/placeholder-data.js');
+
+  return customers;
+}
+
 export async function fetchFilteredCustomers(query: string) {
   noStore();
   
