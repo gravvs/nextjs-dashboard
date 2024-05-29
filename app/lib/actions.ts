@@ -25,10 +25,10 @@ const FormCustomerSchema = z.object({
   id: z.string(),
   name: z.string({
     invalid_type_error: 'Please enter a name.',
-  }),
+  }).min(1),
   email: z.string({
     invalid_type_error: 'Please enter a email.',
-  }),
+  }).email().min(1),
   image_url: z.string({
     invalid_type_error: 'Please select avatar.',
   }),

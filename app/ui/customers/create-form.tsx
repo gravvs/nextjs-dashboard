@@ -10,11 +10,15 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createCustomer } from '@/app/lib/actions';
+import { useState } from 'react';
 
 export default function Form({ customers }: { customers: CustomerAvatar[] }) {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createCustomer, initialState);
-  
+  const [image, setImage] = useState('');
+  const handleChange = (e: string) => {
+    setImage(e);
+  }
   return (
     <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -26,7 +30,7 @@ export default function Form({ customers }: { customers: CustomerAvatar[] }) {
           <div className="relative">
               <input
                 id="name"
-                name="customerName"
+                name="name"
                 type="text"
                 placeholder="Your name..."
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -53,7 +57,7 @@ export default function Form({ customers }: { customers: CustomerAvatar[] }) {
             <div className="relative">
               <input
                 id="email"
-                name="customerEmail"
+                name="email"
                 type="email"
                 placeholder="Your email..."
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
@@ -84,6 +88,7 @@ export default function Form({ customers }: { customers: CustomerAvatar[] }) {
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               aria-describedby="image_url-error"
+              onChange={(e) => handleChange(e.target.value)}
             >
               <option value="" disabled>
                 Select a customer
@@ -103,6 +108,9 @@ export default function Form({ customers }: { customers: CustomerAvatar[] }) {
                   {error}
                 </p>
               ))}
+              <img src={image}
+              className="w-25 rounded-full mt-5 ml-5"
+              />
           </div>
         </div>
       </div>
